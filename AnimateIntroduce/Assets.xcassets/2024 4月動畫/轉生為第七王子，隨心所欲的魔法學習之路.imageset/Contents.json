@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "轉生為第七王子，隨心所欲的魔法學習之路.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

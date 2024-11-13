@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "轉生貴族憑鑑定技能扭轉人生.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

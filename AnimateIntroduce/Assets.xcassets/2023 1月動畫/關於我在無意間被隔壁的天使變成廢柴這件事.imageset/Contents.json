@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "關於我在無意間被隔壁的天使變成廢柴這件事.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
