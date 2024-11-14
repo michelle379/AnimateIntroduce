@@ -23,9 +23,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     @IBOutlet weak var YearButton: UIButton!
     @IBOutlet weak var YearTextField: UITextField!
     
-    var selectYear:Int = 2024
-    var selectMonth:Int = 10
-    
+    var selectYear:Int = 0
+    var selectMonth:Int = 0
     var AniYearList:[String] = []
     var AniMonthList:[String] = []
     var aniList:[Animates] = []
@@ -43,6 +42,7 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
         MonthTextField.inputAccessoryView = MonthToolbar
         
         AniDataFetch()
+        
         //初始
         print(aniList)
         countLabel.text = "\(aniList.count)"
@@ -65,6 +65,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
                     self.AllAnimates = AnimationsData.AllAnimate
                     let lastcountAni = AnimationsData.AllAnimate.count-1
                     self.aniList = AnimationsData.AllAnimate[lastcountAni].anime_seasons.anime_list
+                    self.selectYear = Int(self.AniYearList[self.AniYearList.count-1])!
+                    self.selectMonth = Int(self.AniMonthList[self.AniMonthList.count-1])!
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
