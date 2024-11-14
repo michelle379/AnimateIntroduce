@@ -26,20 +26,58 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     var selectYear:Int = 2024
     var selectMonth:Int = 10
     
-    //初始
-    var aniList:[Animates] = AllAnimate[7].anime_seasons.anime_list
+    var AniYearList:[String] = []
+    var AniMonthList:[String] = []
+    var aniList:[Animates] = []
+    var AllAnimates:[Ani] = []
+//    //初始
+//    var aniList:[Animates] = AnimationsData.anime_seasons.anime_list
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        countLabel.text = "\(aniList.count)"
+//        countLabel.text = "\(aniList.count)"
         //textField設定
         YearTextField.inputView = YearPickerView
         YearTextField.inputAccessoryView = YearToolbar
         MonthTextField.inputView = MonthPickerView
         MonthTextField.inputAccessoryView = MonthToolbar
+        
+        AniDataFetch()
+        //初始
+        print(aniList)
+        countLabel.text = "\(aniList.count)"
         //searchbar顏色
 //        searchBar.searchTextField.backgroundColor = .white
     }
+    
+    func AniDataFetch(){
+        let urlString = "https://raw.githubusercontent.com/michelle379/AnimateList_JSON_API/refs/heads/main/AnimationsDetail.json"
+        guard let url = URL(string: urlString) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let data {
+                let decoder = JSONDecoder()
+                do{
+                    let AnimationsData = try decoder.decode(AnimateAPI.self, from: data)
+                    print(AnimationsData)
+                    //初始
+                    self.AniYearList = AnimationsData.AniYear
+                    self.AniMonthList = AnimationsData.AniMonth
+                    self.AllAnimates = AnimationsData.AllAnimate
+                    let lastcountAni = AnimationsData.AllAnimate.count-1
+                    self.aniList = AnimationsData.AllAnimate[lastcountAni].anime_seasons.anime_list
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }catch{
+                    print(error)
+                }
+            }
+        }.resume()
+    }
+    
+    
+    
+    
 
     // MARK: - Table view data source
     //預設為1
@@ -79,8 +117,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     
     func updateList(){
         aniList.removeAll()
-        for index in 0..<AllAnimate.count{
-            let anidetail = AllAnimate[index].anime_seasons
+        for index in 0..<AllAnimates.count{
+            let anidetail = AllAnimates[index].anime_seasons
             if selectYear == anidetail.year{
                 if selectMonth == anidetail.month{
                     aniList = anidetail.anime_list
@@ -115,9 +153,9 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == YearPickerView {
-            return AniYear.count
+            return AniYearList.count
         } else if pickerView == MonthPickerView {
-            return AniMonth.count
+            return AniMonthList.count
         }
         return 0
         
@@ -125,9 +163,9 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == YearPickerView {
-            return AniYear[row]
+            return AniYearList[row]
         } else if pickerView == MonthPickerView {
-            return AniMonth[row]
+            return AniMonthList[row]
         }
         return nil
     }
@@ -146,8 +184,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     
     @IBAction func YearDone(_ sender: Any) {
         let yearrownum = YearPickerView.selectedRow(inComponent: 0)
-        YearButton.setTitle(AniYear[yearrownum], for: .normal)
-        selectYear = Int(AniYear[yearrownum])!
+        YearButton.setTitle(AniYearList[yearrownum], for: .normal)
+        selectYear = Int(AniYearList[yearrownum])!
         print(selectYear)
         view.endEditing(true)
         updateList()
@@ -166,8 +204,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
     
     @IBAction func MonthDone(_ sender: Any) {
         let monthrownum = MonthPickerView.selectedRow(inComponent: 0)
-        MonthButton.setTitle(AniMonth[monthrownum], for: .normal)
-        selectMonth = Int(AniMonth[monthrownum])!
+        MonthButton.setTitle(AniMonthList[monthrownum], for: .normal)
+        selectMonth = Int(AniMonthList[monthrownum])!
         print(selectMonth)
         view.endEditing(true)
         updateList()
@@ -180,8 +218,8 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
         YearButton.titleLabel?.text = ""
         let keyword = SearchTextField.text!
         aniList.removeAll()
-        for i in 0..<AllAnimate.count{
-            let anilistdetail = AllAnimate[i].anime_seasons.anime_list
+        for i in 0..<AllAnimates.count{
+            let anilistdetail = AllAnimates[i].anime_seasons.anime_list
             for j in 0..<anilistdetail.count{
                 if anilistdetail[j].title.lowercased().contains(keyword.lowercased()){
                     // 檢查 aniList 中是否已經包含該動畫
@@ -209,3 +247,4 @@ class AnimatesTableViewController: UITableViewController , UIPickerViewDataSourc
 #Preview {
     UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()!
 }
+
